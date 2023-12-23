@@ -219,7 +219,7 @@ export const Orders: React.FunctionComponent = () => {
               style={{
                 width: "100%",
                 display: "flex",
-                "justify-content": "space-between",
+                justifyContent: "space-between",
               }}
             >
               <div>איש קשר: {order.name}</div>
