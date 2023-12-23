@@ -168,6 +168,10 @@ export const AssignedOrders: React.FunctionComponent = () => {
         itemRender={{
           header: (order) => (
             <div style={{ width: "100%" }}>
+              <div>
+                תאריך יצירה:{" "}
+                {new Date(order.createdAt).toLocaleDateString("en-GB")}
+              </div>
               <div>איזור: {order.region ?? "ללא איזור מוגדר"}</div>
               <div>
                 איש קשר: {order.name}, טלפון:{" "}
