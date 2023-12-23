@@ -138,27 +138,24 @@ export const Orders: React.FunctionComponent = () => {
         (result) => result.error?.length > 0
       ).length;
 
+      const buttons = [
+        {
+          text: "אישור";
+          appearance: "primary";
+        }
+      ];
+
       if (failedAssigns > 0) {
         setConfirmProps({
           title: `${failedAssigns} הזמנות נכשלו`,
           subText: "בדוק את לשונית הזמנות שלי",
-          buttons: [
-            {
-              text: "אישור",
-              appearance: "primary",
-            },
-          ],
+          buttons
         });
       } else {
         setConfirmProps({
           title: "הזמנה נשלחה בהצלחה",
           subText: "הפריט שלך יופיע תחת לשונית הזמנות שלי",
-          buttons: [
-            {
-              text: "אישור",
-              appearance: "primary",
-            },
-          ],
+          buttons
         });
       }
 
