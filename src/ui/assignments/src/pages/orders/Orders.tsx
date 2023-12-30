@@ -90,6 +90,7 @@ export const Orders: React.FunctionComponent = () => {
     // The filter out the items that where assigned. All the assigned items and orders that don't have any un-assigned items left.
     let subItemsToAssign: FilteredSubItem[] = [];
     const ordersToKeep: FilteredOrder[] = [];
+    let assignResults = [];
 
     try {
       setSaving(true);
@@ -115,7 +116,7 @@ export const Orders: React.FunctionComponent = () => {
         }
       });
 
-      await Promise.all(
+      assignResults = await Promise.all(
         subItemsToAssign.map((subItem) =>
           ordersService.assignSubItem({
             orderId: subItem.order_id,
@@ -133,16 +134,31 @@ export const Orders: React.FunctionComponent = () => {
       setOrders(ordersToKeep); // update the UI with the orders that were not assigned
       setSaving(false);
 
-      setConfirmProps({
-        title: "הזמנה נשלחה בהצלחה",
-        subText: "הפריט שלך יופיע תחת לשונית הזמנות שלי",
-        buttons: [
-          {
-            text: "אישור",
-            appearance: "primary",
-          },
-        ],
-      });
+      const failedAssigns = assignResults.filter(
+        (result) => result.error?.length > 0
+      ).length;
+
+      const buttons = [
+        {
+          text: "אישור",
+          appearance: "primary",
+        },
+      ];
+
+      if (failedAssigns > 0) {
+        setConfirmProps({
+          title: `${failedAssigns} הזמנות נכשלו`,
+          subText: "בדוק את לשונית הזמנות שלי",
+          buttons,
+        });
+      } else {
+        setConfirmProps({
+          title: "הזמנה נשלחה בהצלחה",
+          subText: "הפריט שלך יופיע תחת לשונית הזמנות שלי",
+          buttons,
+        });
+      }
+
       setConfirmOpen(true);
     }
   };
@@ -195,13 +211,21 @@ export const Orders: React.FunctionComponent = () => {
           product: true,
         }}
         itemRender={{
-          header: (order) =>  (
-            <div style={{"width": "100%", display: "flex", "justifyContent": "space-between"}}>
+          header: (order) => (
+            <div
+              style={{
+                width: "100%",
+                display: "flex",
+                justifyContent: "space-between",
+              }}
+            >
               <div>איש קשר: {order.name}</div>
-              <div>תאריך יצירה: {new Date(order.createdAt).toLocaleDateString('en-GB')}</div>
+              <div>
+                תאריך יצירה:{" "}
+                {new Date(order.createdAt).toLocaleDateString("en-GB")}
+              </div>
             </div>
-          )
-          ,
+          ),
           content: (order) => (
             <SubItems
               items={order.subItems}
