@@ -14,11 +14,11 @@ import {
 } from "../../components/ConfirmDialog.tsx";
 import { AssignedSubItems } from "./AssignedSubItems.tsx";
 import { BasePage } from "../../components/BasePage.tsx";
+// import { SubItemsCount } from "./SubItemsCount.tsx";
 
 export const AssignedOrders: React.FunctionComponent = () => {
   const [myOrders, setMyOrders] = useState<FilteredOrder[] | null>(null); // assigned-orders list from the server
   const [statusesList, setStatusesList] = useState<string[] | undefined>(); // static list of status from the server
-
   const [confirmOpen, setConfirmOpen] = useState<boolean | undefined>(false);
   const [confirmProps, setConfirmProps] = useState<
     Omit<ConfirmDialogProps, "openState"> | undefined
@@ -177,9 +177,8 @@ export const AssignedOrders: React.FunctionComponent = () => {
                 איש קשר: {order.name}, טלפון:{" "}
                 <Body1Stronger>
                   <a
-                    href={`tel:${
-                      (order.phone ?? "").startsWith("972") ? "+" : ""
-                    }${order.phone}`}
+                    href={`tel:${(order.phone ?? "").startsWith("972") ? "+" : ""
+                      }${order.phone}`}
                   >
                     {order.phone}
                   </a>
@@ -200,6 +199,7 @@ export const AssignedOrders: React.FunctionComponent = () => {
           ),
         }}
       />
+      {/* <SubItemsCount assignedOrders={myOrders}/> */}
       {/* POPUP */}
       {confirmProps && (
         <ConfirmDialog
