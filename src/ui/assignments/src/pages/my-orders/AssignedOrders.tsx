@@ -185,8 +185,6 @@ export const AssignedOrders: React.FunctionComponent = () => {
                   </a>
                 </Body1Stronger>
               </div>
-              {/* <SubItemsCount assignedOrders={myOrders} /> */}
-
               <Divider appearance="strong" />
             </div>
           ),

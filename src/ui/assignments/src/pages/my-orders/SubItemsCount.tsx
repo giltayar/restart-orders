@@ -41,7 +41,6 @@ export const SubItemsCount: React.FunctionComponent<SubItemsCountProps> = ({ ass
     }
 
     useEffect(() => {
-        console.log(assignedOrders);
         countSubItems()
     }, [assignedOrders])
 
@@ -84,7 +83,6 @@ export const SubItemsCount: React.FunctionComponent<SubItemsCountProps> = ({ ass
             <Card style={cardStyle}>
                 <CardHeader
                     header={<Subtitle1>סה"כ לפי פריט</Subtitle1>}
-                // description={itemRender.header(order)}
                 />
                 <CardPreview>
                     <DataGrid

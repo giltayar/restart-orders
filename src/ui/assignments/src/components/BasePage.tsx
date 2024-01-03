@@ -41,6 +41,7 @@ export interface BasePageProps {
     /** Order item content */
     content: (item: FilteredOrder) => JSX.Element;
   };
+  /** sub-items count for the assigned orders page */
   subItemsCount?: JSX.Element
   /** Page content style */
   style?: React.CSSProperties;
