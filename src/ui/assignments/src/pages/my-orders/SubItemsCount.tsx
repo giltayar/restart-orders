@@ -1,6 +1,6 @@
-import { useEffect, useState } from 'react'
-import { Card, CardHeader, CardPreview, DataGrid, DataGridBody, DataGridCell, DataGridHeader, DataGridHeaderCell, DataGridRow, Subtitle1, TableCellLayout } from '@fluentui/react-components'
-import { FilteredOrder } from '../../services/Filters.service'
+import { useEffect, useState } from "react"
+import { Card, CardHeader, CardPreview, DataGrid, DataGridBody, DataGridCell, DataGridHeader, DataGridHeaderCell, DataGridRow, Subtitle1, TableCellLayout, TableColumnSizingOptions, createTableColumn } from "@fluentui/react-components"
+import { FilteredOrder, FilteredSubItem } from "../../services/Filters.service"
 
 interface SubItemsCountProps {
     assignedOrders: FilteredOrder[] | null
@@ -45,24 +45,53 @@ export const SubItemsCount: React.FunctionComponent<SubItemsCountProps> = ({ ass
         countSubItems()
     }, [assignedOrders])
 
-    useEffect(() => {
-        console.log(subItemsCount);
 
-    }, [subItemsCount])
+    const columns = [
+        createTableColumn<SubItemCount>({
+            columnId: "itemDescription",
+            renderHeaderCell: () => {
+                return "פריט";
+            },
+            renderCell: (item: SubItemCount) => {
+                return <TableCellLayout>{item.name}</TableCellLayout>;
+            },
+        }),
+        createTableColumn<FilteredSubItem>({
+            columnId: "quantity",
+            renderHeaderCell: () => {
+                return "כמות";
+            },
+            renderCell: (item) => {
+                return <TableCellLayout>{item.quantity}</TableCellLayout>;
+            },
+        }),
+    ];
+
+    const columnSizing: TableColumnSizingOptions = {
+        itemDescription: {
+            minWidth: 50,
+            defaultWidth: 50
+        },
+        quantity: {}
+    };
+
+    const cardStyle: React.CSSProperties = {
+        background: "rgb(207 228 250 / 40%)",
+      };
 
     return (
         <>
-            <Card>
+            <Card style={cardStyle}>
                 <CardHeader
-                    header={<Subtitle1>title</Subtitle1>}
+                    header={<Subtitle1>סה"כ לפי פריט</Subtitle1>}
                 // description={itemRender.header(order)}
                 />
                 <CardPreview>
-                    {/* <DataGrid
-                        items={[]}
-                    // columns={}
-                    // getRowId={(item) => item.id}
-                    // columnSizingOptions={columnSizing}
+                    <DataGrid
+                        items={subItemsCount}
+                        columns={columns}
+                        getRowId={(item) => item.id}
+                        columnSizingOptions={columnSizing}
                     >
                         <DataGridHeader>
                             <DataGridRow selectionCell={{ style: { display: "none" } }}>
@@ -71,15 +100,16 @@ export const SubItemsCount: React.FunctionComponent<SubItemsCountProps> = ({ ass
                                 )}
                             </DataGridRow>
                         </DataGridHeader>
-                        <DataGridBody>
-                            <DataGridRow>
-                                <DataGridCell>
-                                    <TableCellLayout></TableCellLayout>
-                                </DataGridCell>
-                            </DataGridRow>
-
+                        <DataGridBody<SubItemCount>>
+                            {({ item, rowId }) => (
+                                <DataGridRow<SubItemCount> key={rowId}>
+                                    {({ renderCell }) => (
+                                        <DataGridCell>{renderCell(item)}</DataGridCell>
+                                    )}
+                                </DataGridRow>
+                            )}
                         </DataGridBody>
-                    </DataGrid> */}
+                    </DataGrid>
                 </CardPreview>
             </Card>
         </>

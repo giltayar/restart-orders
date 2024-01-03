@@ -14,7 +14,7 @@ import {
 } from "../../components/ConfirmDialog.tsx";
 import { AssignedSubItems } from "./AssignedSubItems.tsx";
 import { BasePage } from "../../components/BasePage.tsx";
-// import { SubItemsCount } from "./SubItemsCount.tsx";
+import { SubItemsCount } from "./SubItemsCount.tsx";
 
 export const AssignedOrders: React.FunctionComponent = () => {
   const [myOrders, setMyOrders] = useState<FilteredOrder[] | null>(null); // assigned-orders list from the server
@@ -165,6 +165,7 @@ export const AssignedOrders: React.FunctionComponent = () => {
           product: true,
           done: true,
         }}
+        subItemsCount={<SubItemsCount assignedOrders={myOrders}/>}
         itemRender={{
           header: (order) => (
             <div style={{ width: "100%" }}>
@@ -184,22 +185,25 @@ export const AssignedOrders: React.FunctionComponent = () => {
                   </a>
                 </Body1Stronger>
               </div>
+              {/* <SubItemsCount assignedOrders={myOrders} /> */}
+
               <Divider appearance="strong" />
             </div>
           ),
           content: (order) => (
-            <AssignedSubItems
-              items={order.subItems}
-              statusesList={statusesList ?? []}
-              onStatusChange={(subItem, status, onCancel) =>
-                confirmSubItemStatusChange(order.id, subItem, status, onCancel)
-              }
-              onDelete={(item) => confirmSubItemRemove(order.id, item)}
-            />
+            <>
+              <AssignedSubItems
+                items={order.subItems}
+                statusesList={statusesList ?? []}
+                onStatusChange={(subItem, status, onCancel) =>
+                  confirmSubItemStatusChange(order.id, subItem, status, onCancel)
+                }
+                onDelete={(item) => confirmSubItemRemove(order.id, item)}
+              />
+            </>
           ),
         }}
       />
-      {/* <SubItemsCount assignedOrders={myOrders}/> */}
       {/* POPUP */}
       {confirmProps && (
         <ConfirmDialog
