@@ -16,20 +16,23 @@ export const SubItemsCount: React.FunctionComponent<SubItemsCountProps> = ({ ass
     const [subItemsCount, setSubItemsCount] = useState<SubItemCount[]>([]);
 
     const countSubItems = () => {
+        const itemsCount: Record<string, { quantity: number, name: string }> = assignedOrders
+            ? assignedOrders.reduce((acc, order) => {
+                order.subItems.reduce((subItemsAcc: Record<string, { quantity: number, name: string }>, subItem) => {
+                    const { name, product_number } = subItem.product || {};
+                    const { quantity } = subItem;
 
-        const itemsCount: Record<string, { quantity: number, name: string }> = {}
+                    subItemsAcc[product_number] = {
+                        quantity: (subItemsAcc[product_number]?.quantity || 0) + quantity,
+                        name,
+                    };
 
-        assignedOrders?.forEach(order => {
-            order.subItems.forEach(subItem => {
-                const { name, product_number } = subItem.product
-                const { quantity } = subItem
-                if (itemsCount[product_number]) {
-                    itemsCount[product_number].quantity += quantity;
-                } else {
-                    itemsCount[product_number] = { quantity, name };
-                }
-            })
-        })
+                    return subItemsAcc;
+                }, acc);
+
+                return acc;
+            }, {})
+            : {};
 
         const subItemsArray = Object.entries(itemsCount).map(([productId, { quantity, name }]) => ({
             productId,
@@ -37,8 +40,8 @@ export const SubItemsCount: React.FunctionComponent<SubItemsCountProps> = ({ ass
             name,
         }));
 
-        setSubItemsCount(subItemsArray)
-    }
+        setSubItemsCount(subItemsArray);
+    };
 
     useEffect(() => {
         countSubItems()
@@ -76,40 +79,38 @@ export const SubItemsCount: React.FunctionComponent<SubItemsCountProps> = ({ ass
 
     const cardStyle: React.CSSProperties = {
         background: "rgb(207 228 250 / 40%)",
-      };
+    };
 
     return (
-        <>
-            <Card style={cardStyle}>
-                <CardHeader
-                    header={<Subtitle1>סה"כ לפי פריט</Subtitle1>}
-                />
-                <CardPreview>
-                    <DataGrid
-                        items={subItemsCount}
-                        columns={columns}
-                        getRowId={(item) => item.id}
-                        columnSizingOptions={columnSizing}
-                    >
-                        <DataGridHeader>
-                            <DataGridRow selectionCell={{ style: { display: "none" } }}>
-                                {({ renderHeaderCell }) => (
-                                    <DataGridHeaderCell style={{ fontWeight: "bold" }}>{renderHeaderCell()}</DataGridHeaderCell>
+        <Card style={cardStyle}>
+            <CardHeader
+                header={<Subtitle1>סה"כ לפי פריט</Subtitle1>}
+            />
+            <CardPreview>
+                <DataGrid
+                    items={subItemsCount}
+                    columns={columns}
+                    getRowId={(item) => item.id}
+                    columnSizingOptions={columnSizing}
+                >
+                    <DataGridHeader>
+                        <DataGridRow selectionCell={{ style: { display: "none" } }}>
+                            {({ renderHeaderCell }) => (
+                                <DataGridHeaderCell style={{ fontWeight: "bold" }}>{renderHeaderCell()}</DataGridHeaderCell>
+                            )}
+                        </DataGridRow>
+                    </DataGridHeader>
+                    <DataGridBody<SubItemCount>>
+                        {({ item, rowId }) => (
+                            <DataGridRow<SubItemCount> key={rowId}>
+                                {({ renderCell }) => (
+                                    <DataGridCell>{renderCell(item)}</DataGridCell>
                                 )}
                             </DataGridRow>
-                        </DataGridHeader>
-                        <DataGridBody<SubItemCount>>
-                            {({ item, rowId }) => (
-                                <DataGridRow<SubItemCount> key={rowId}>
-                                    {({ renderCell }) => (
-                                        <DataGridCell>{renderCell(item)}</DataGridCell>
-                                    )}
-                                </DataGridRow>
-                            )}
-                        </DataGridBody>
-                    </DataGrid>
-                </CardPreview>
-            </Card>
-        </>
+                        )}
+                    </DataGridBody>
+                </DataGrid>
+            </CardPreview>
+        </Card>
     )
 }

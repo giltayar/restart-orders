@@ -189,7 +189,6 @@ export const AssignedOrders: React.FunctionComponent = () => {
             </div>
           ),
           content: (order) => (
-            <>
               <AssignedSubItems
                 items={order.subItems}
                 statusesList={statusesList ?? []}
@@ -198,7 +197,6 @@ export const AssignedOrders: React.FunctionComponent = () => {
                 }
                 onDelete={(item) => confirmSubItemRemove(order.id, item)}
               />
-            </>
           ),
         }}
       />
