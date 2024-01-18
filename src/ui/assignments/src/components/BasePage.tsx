@@ -41,6 +41,8 @@ export interface BasePageProps {
     /** Order item content */
     content: (item: FilteredOrder) => JSX.Element;
   };
+  /** sub-items count for the assigned orders page */
+  subItemsCount?: JSX.Element
   /** Page content style */
   style?: React.CSSProperties;
 }
@@ -51,6 +53,7 @@ export const BasePage: React.FunctionComponent<BasePageProps> = ({
   loading,
   filters,
   itemRender,
+  subItemsCount,
   style = {},
 }) => {
   const [orders, setOrders] = useState<(FilteredOrder & WithNote)[] | null>(
@@ -168,6 +171,8 @@ export const BasePage: React.FunctionComponent<BasePageProps> = ({
                   pageNumber={pageNumber}
                   pageCount={pageCount}
                 />
+                {/* SUB ITEMS COUNT */}
+                {subItemsCount && <>{subItemsCount}</>}
                 {/* ITEMS LIST */}
                 {visibleOrders.map((order, index) => (
                   <Card key={index}>
